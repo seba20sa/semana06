@@ -9,8 +9,5 @@ Added intersection features, randomizer function so the fruits appears in a rand
 ## fifth commit 11/7 
 Added new variables modified some functions to get a 'game over' and 'pause' screens. The game restarts everytime the game is over. 
 
-
-
-
-##To test the different versions and progress
+## test:
 https://seba20sa.github.io/semana06/first-game.html

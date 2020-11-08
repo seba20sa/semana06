@@ -9,11 +9,16 @@ var canvas = null,
     keyDown = 40,
     direction = 0,
     scoring= 0,
-    block =  new Array(),
-    gameOver = true,
-    player = null;
-    
-    
+    //player = null,
+    // block =  new Array(),
+    gameOver = true,    
+    snakeBody =  new Array(),
+    iSnakeBody= new Image(),
+    aEatfruit = new Audio(),
+    aEatSuperfruit = new Audio(),
+    aChangeDirection = new Audio(),
+    aGameOver = new Audio(),
+    ifruit= new Image();
 // for older browsers
 window.requestAnimationFrame = (function () {
     return window.requestAnimationFrame ||
@@ -61,35 +66,49 @@ function randomizer(n) {
 function resetGame () {
     scoring = 0;
     direction = 1;
-    player.x = 100;
-    player.y = 100;
+    //starts no head no body
+    snakeBody.length = 0;
+    //adding head and body
+    snakeBody.push(new rectangle(100, 100, 10, 10));
+    snakeBody.push(new rectangle(90, 100, 10, 10));
+    snakeBody.push(new rectangle(80, 100, 10, 10));
+    snakeBody.push(new rectangle(70, 100, 10, 10));
+    snakeBody.push(new rectangle(60, 100, 10, 10));
+    snakeBody.push(new rectangle(50, 100, 10, 10));
+    snakeBody.push(new rectangle(40, 100, 10, 10));
+    snakeBody.push(new rectangle(30, 100, 10, 10));
+    snakeBody.push(new rectangle(20, 100, 10, 10));
+    snakeBody.push(new rectangle(10, 100, 10, 10));
+    snakeBody.push(new rectangle(0, 100, 10, 10));      
     fruit.x  = randomizer(canvas.width/10 -1)*10;
     fruit.y  = randomizer(canvas.height/10 -1)*10;
-    gameOver = false;
-      
+    gameOver = false;      
 } 
 // drawing of elements
 function paint(ctx) {
     // re doing the canvas
     ctx.fillStyle = '#ddd';
     ctx.fillRect(0, 0, canvas.width, canvas.height);
-    //first square 
-    ctx.fillStyle = 'yellow';
-    player.fill(ctx);
-    //first fruit
-    ctx.fillStyle = 'green';
-    fruit.fill(ctx);
-    console.log (lastPressed);
-    // Showing pause on screen
-   
-    //show killer blocks
-    ctx.fillStyle = 'red';
-    for (x = 0; x < block.length; x++) {
-        block[x].fill(ctx);
+    //drawing the naske's body 
+     ctx.fillStyle = 'yellow'
+    for (j = 1; j < snakeBody.length; j++) {
+        //  snakeBody[j].fill(ctx);
+        ctx.drawImage(iSnakeBody, snakeBody[j].x, snakeBody[j].y);
     }
+    //first fruit
+    // ctx.fillStyle = 'green';
+    // fruit.fill(ctx);
+    ctx.drawImage(ifruit, fruit.x, fruit.y);
+    //show killer blocks
+    // ctx.fillStyle = 'red';
+    // for (x = 0; x < block.length; x++) {
+    //     block[x].fill(ctx);
+    // }
     //scoring sum
     ctx.fillText('Scores: ' + scoring, 5, 15);
+    //showing pause or g over status
     if (pause) {
+        ctx.fillStyle = 'blue';
         ctx.textAlling = 'center';
         if (gameOver) {
             ctx.fillText('Game Over', 200, 100);
@@ -99,70 +118,83 @@ function paint(ctx) {
     }
 }
 //actions automatic movement starting after pause is false
-
-function act() {
-    var x;
+function act() {    
     if (!pause) {
         //Reset the game once Game Over is true.
         if (gameOver){
             resetGame();            
         }
+        //after the head is drawn the movement starts
+        for (j = snakeBody.length-1; j > 0 ; j--) {
+            snakeBody[j].x = snakeBody[j - 1].x;
+            snakeBody[j].y = snakeBody[j - 1].y;
+        }
         // directions
-        if (lastPressed == keyUp) {
+        if (lastPressed == keyUp && direction != 2) {
             direction = 0;
         } 
-        if (lastPressed == keyRight) {
+        if (lastPressed == keyRight && direction != 3) {
             direction = 1;
         } 
-         if (lastPressed == keyDown) {
+         if (lastPressed == keyDown && direction != 0) {
             direction = 2;
         } 
-        if (lastPressed == keyLeft) {
+        if (lastPressed == keyLeft && direction != 1) {
             direction = 3;
         }
-        // movement based on previous keystrokes
+        // movement based on previous keystrokes adding imposibility to go in reverse
         if (direction == 0) {
-            player.y -= 10;
+            snakeBody[0].y -= 10;
         } 
         if (direction == 1) {
-            player.x += 10;
+            snakeBody[0].x += 10;
         } 
         if (direction == 2) {
-            player.y += 10;
+            snakeBody[0].y += 10;
         } 
          if (direction == 3) {
-            player.x -=10;
+            snakeBody[0].x -=10;
         }
-        // out of screen control 
-        if (player.x > canvas.width) {
-            player.x = 0;
+        // out of screen control taking into account snake head length when the snake hits the wall
+        if (snakeBody[0].x > (canvas.width - snakeBody[0].width)) {
+            snakeBody[0].x = 0;
         }
-        if (player.x < 0) {
-            player.x = canvas.width;
+        if (snakeBody[0].x < 0) {
+            snakeBody[0].x = (canvas.width - snakeBody[0].width);
         } 
-        if (player.y > canvas.height) {
-            player.y = 0;
+        if (snakeBody[0].y > (canvas.height - snakeBody[0].height)) {
+            snakeBody[0].y = 0;
         }
-        if (player.y < 0) {
-            player.y = canvas.height;
+        if (snakeBody[0].y < 0) {
+            snakeBody[0].y = (canvas.height - snakeBody[0].height);
         }
-        // fruit-snake intersection control
-        if(player.intersects(fruit)) {
+        // fruit-snake intersection control        
+        if (snakeBody[0].intersects(fruit)) {
+            snakeBody.push(new rectangle(fruit.x, fruit.y, 10, 10));
             scoring += 1;
             fruit.x  = randomizer(canvas.width/10 -1)*10;
             fruit.y  = randomizer(canvas.height/10 -1)*10;
-        } 
-        //control fruit not touching blocks and add pause if player touches a block
-         for (x = 0; x < block.length; x++) {
-            if (fruit.intersects(block[x])) {
-                fruit.x  = randomizer(canvas.width/10 -1)*10;
-                fruit.y  = randomizer(canvas.height/10 -1)*10;
-             }
-             if (player.intersects(block[x])) {
+            aEatfruit.play();
+        }
+        // touching owns body control starts with 2 because the firs one can never do it
+        for (j = 2; j < snakeBody.length-1; j++) {
+            if(snakeBody[0].intersects(snakeBody[j])) {                
                 gameOver = true;
-                pause = true;                
-             }
-         }
+                pause = true;
+                aGameOver.play();
+            }
+        }        
+        //control fruit not touching blocks and add pause if player touches a block
+        //  for (j = 0; j < block.length; j++) {
+        //     if (fruit.intersects(block[j])) {
+        //         fruit.x  = randomizer(canvas.width/10 -1)*10;
+        //         fruit.y  = randomizer(canvas.height/10 -1)*10;
+        //      }
+        //      if (snakeBody[0].intersects(block[j])) {
+        //         gameOver = true;
+        //         pause = true;                
+        //      }
+        //  }
     }
     // pause toggle
     if (lastPressed == keyEnter) {
@@ -181,19 +213,25 @@ function run() {
 }
 // now init calls run
 function init() {
+    //canvas and context
     canvas = document.getElementById('canvas');
     ctx = canvas.getContext('2d');
     //player creation with a new object of the rectangle class
     player = new rectangle(100, 100, 10, 10);
     //regular fruit
     fruit = new rectangle(60, 60, 10, 10);
+    //get media assests
+    iSnakeBody.src = 'assets/body-piece.png'
+    ifruit.src = 'assets/fruit.png'
+    //media sounds
+    aEatfruit.src =  'assets/chomp.oga'
+    aGameOver.src = 'assets/dies.oga'
     //  killer blocks
-    block.push(new rectangle(120, 70, 10, 10));
-    block.push(new rectangle(370, 70, 10, 10));
-    block.push(new rectangle(120, 120, 10, 10));
-    block.push(new rectangle(370, 120, 10, 10));
+    // block.push(new rectangle(120, 70, 10, 10));
+    // block.push(new rectangle(370, 70, 10, 10));
+    // block.push(new rectangle(120, 120, 10, 10));
+    // block.push(new rectangle(370, 120, 10, 10));
     run();
     repaint();
 }
 window.addEventListener('load', init, false);
-

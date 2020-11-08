@@ -7,7 +7,9 @@ Added variables for the directional keys modified and separated the action funct
 ## forth commit 11/7 
 Added intersection features, randomizer function so the fruits appears in a random location each time the snake head intersects with it.
 ## fifth commit 11/7 
-Added new variables modified some functions to get a 'game over' and 'pause' screens. The game restarts everytime the game is over. 
+Added new variables modified some functions to get a 'game over' and 'pause' screens. The game restarts everytime the game is over.
+## commit 11/8 
+Made the snake body larger and added media files for the snake body fruits and added media sounds for the actions. 
 
 ## test:
 https://seba20sa.github.io/semana06/first-game.html

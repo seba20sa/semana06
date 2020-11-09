@@ -32,8 +32,10 @@
         iBanana = new Image(),        
         iBody = new Image(),
         iFood = new Image(),
+        // aCena = new Audio(),
         aEat = new Audio(),
-        aDie = new Audio();        
+        aDie = new Audio();
+
         // randomizer for food and banana
         var chances = ~~(Math.random()*100);
            
@@ -172,14 +174,16 @@
         iBanana.src = 'assets/banana.png';
         iBody.src = 'assets/body.png';
         iFood.src = 'assets/fruit.png';
-        aEat.src = 'assets/chomp.ogg';
-        aDie.src = 'assets/dies.ogg';
+        
         if (canPlayOgg()) {
-			aEat.src="assets/chomp.ogg";
-			aDie.src = 'assets/dies.ogg';
+			aEat.src="assets/chomp.oga";
+            aDie.src = 'assets/dies.ogg';
+            // aCena.src = 'assets/cena.ogg';
         } else {
 			aEat.src="assets/chomp.m4a";
-			aDie.src = 'assets/dies.m4a';
+            aDie.src = 'assets/dies.m4a';
+            // aCena.src = 'assets/cena.m4a';
+            
 		}
         // Create food        
         food = new Rectangle(80, 80, 10, 10);
@@ -204,12 +208,14 @@
         ctx.textAlign = 'center';
         ctx.fillText('WELCOME TO SNAKE', 150, 60);
         ctx.fillText('Press Enter', 150, 90);
+        // aCena.play();
     };
     mainScene.act = function () {
         // Load next scene
         if (lastPress === KEY_ENTER) {
             loadScene(highscoresScene);
             lastPress = null;
+            
         }
     };
     // Game Scene
@@ -342,17 +348,18 @@
             }
             // Food Intersects
             if (body[0].intersects(food)) {
+                aEat.play();
                 body.push(new Rectangle(0, 0, 10, 10));
                 score += 1;
                 food.x = random(canvas.width / 10 - 1) * 10;
-                food.y = random(canvas.height / 10 - 1) * 10;
-                aEat.play();
+                food.y = random(canvas.height / 10 - 1) * 10;                
                 //reset chances
                 chances = ~~(Math.random()*100);
                 // console.log(chances);
             }
             // banana Intersects modification of the snake size method
             if (body[0].intersects(banana)) {
+                aEat.play();
                 score += 2;
                 banana.x = random(canvas.width / 10 - 1) * 10;
                 banana.y = random(canvas.height / 10 - 1) * 10;
@@ -360,7 +367,7 @@
                 chances = ~~(Math.random()*100);
                 // console.log(chances);                
                 //for now use same sound
-                aEat.play();
+                
             }
             // Wall Intersects (outdated code)
             //for (i = 0, l = wall.length; i < l; i += 1) {

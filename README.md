@@ -14,6 +14,8 @@ Made the snake body larger and added media files for the snake body fruits and a
 Because the ammount of time used on fixing the errors (sometimes for changing the names of some variables from the tutorial some others for typos) 
 I decided to re-start the whole script to match the original in the tutorial and work for there on the finals steps asked in the objective. 
 Tested the revised version for error before carrying out with the weekly asignment.
+## commit 11/9
+Added second fruit, tested for errors. Used the random function to make sure only one fruit appears at a time.
 
 ## test:
 https://seba20sa.github.io/semana06/first-game.html

@@ -28,11 +28,14 @@
         highscores = [],
         posHighscore = 10,
         score = 0,
-        // media        
+        // media
+        iBanana = new Image(),        
         iBody = new Image(),
         iFood = new Image(),
         aEat = new Audio(),
         aDie = new Audio();
+        // randomizer for food and banana
+        var chances = ~~(Math.random()*100);
     //added correction on return
     window.requestAnimationFrame = (function () {
         return (
@@ -133,17 +136,21 @@
             scenes[currentScene].act();
         }
     }
-    function init() {
+    function init() {     
+        console.log(chances);
         // Get canvas and context
         canvas = document.getElementById('canvas');
         ctx = canvas.getContext('2d');
         // Load assets audio compatible for chrome
+        iBanana.src = 'assets/banana.png';
         iBody.src = 'assets/body.png';
         iFood.src = 'assets/fruit.png';
         aEat.src = 'assets/chomp.oga';
         aDie.src = 'assets/dies.oga';
-        // Create food
+        // Create food        
         food = new Rectangle(80, 80, 10, 10);
+        // create banana 
+        banana = new Rectangle (0, 0, 10, 10);
         // Create walls old code if added needs to be converted
         //wall.push(new Rectangle(50, 50, 10, 10));
         //wall.push(new Rectangle(50, 100, 10, 10));
@@ -161,12 +168,12 @@
     mainScene = new Scene();
     mainScene.paint = function (ctx) {
         // Clean canvas
-        ctx.fillStyle = '#030';
+        ctx.fillStyle = '#ddd';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         // Draw title
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = 'white';
         ctx.textAlign = 'center';
-        ctx.fillText('SNAKE', 150, 60);
+        ctx.fillText('WELCOME TO SNAKE', 150, 60);
         ctx.fillText('Press Enter', 150, 90);
     };
     mainScene.act = function () {
@@ -182,25 +189,30 @@
         score = 0;
         dir = 1;
         body.length = 0;
-        //added more difficult 
+        //added more difficulty 
         body.push(new Rectangle(40, 40, 10, 10));
         body.push(new Rectangle(30, 40, 10, 10));
         body.push(new Rectangle(30, 40, 10, 10));
         body.push(new Rectangle(20, 40, 10, 10));
         body.push(new Rectangle(10, 40, 10, 10));
-        body.push(new Rectangle(0, 40, 10, 10));
+        body.push(new Rectangle(0, 40, 10, 10));        
+        //first food
         food.x = random(canvas.width / 10 - 1) * 10;
         food.y = random(canvas.height / 10 - 1) * 10;
+        //banana
+        banana.x = random(canvas.width / 10 - 1) * 10;
+        banana.y = random(canvas.height / 10 - 1) * 10;
+        //game status
         gameover = false;
     };
     gameScene.paint = function (ctx) {
         var i = 0,
         l = 0;
         // Clean canvas
-        ctx.fillStyle = '#030';
+        ctx.fillStyle = '#ddd';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         // Draw player
-        ctx.strokeStyle = '#0f0';
+        ctx.strokeStyle = 'green';
         for (i = 0, l = body.length; i < l; i += 1) {
             body[i].drawImage(ctx, iBody);
         }
@@ -209,15 +221,20 @@
         //for (i = 0, l = wall.length; i < l; i += 1) {
         // wall[i].fill(ctx);
         //}
-        // Draw food
-        ctx.strokeStyle = '#f00';
-        food.drawImage(ctx, iFood);
+        // one in three chances of banana
+        if (chances <= 30 ) {
+            //draw banana
+            ctx.strokeStyle = 'yellow';
+            banana.drawImage(ctx, iBanana);
+        } else {
+            // Draw food
+            ctx.strokeStyle = 'blue';
+            food.drawImage(ctx, iFood);
+        }
         // Draw score
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = 'white';
         ctx.textAlign = 'left';
         ctx.fillText('Score: ' + score, 0, 10);
-        // Debug last key pressed
-        //ctx.fillText('Last Press: '+lastPress,0,20);
         // Draw pause
         if (pause) {
             ctx.textAlign = 'center';
@@ -230,7 +247,7 @@
     };
     gameScene.act = function () {
         var i = 0,
-        l = 0;
+            l = 0;
         if (!pause) {
             // GameOver Reset
             if (gameover) {
@@ -267,7 +284,7 @@
             if (dir === 3) {
                 body[0].x -= 10;
             }
-            // Out Screen
+            // Out Screen control
             if (body[0].x > canvas.width - body[0].width) {
                 body[0].x = 0;
             }
@@ -280,12 +297,37 @@
             if (body[0].y < 0) {
                 body[0].y = canvas.height - body[0].height;
             }
+            // if food or banana appears where the body is it should be re draw
+            for (i = 2; i < body.length; i++) {
+                if(body[i].intersects(food)) {
+                    food.x = random(canvas.width / 10 - 1) * 10;
+                    food.y = random(canvas.height / 10 - 1) * 10;
+                }
+                if(body[i].intersects(banana)) {
+                    banana.x = random(canvas.width / 10 - 1) * 10;
+                    banana.y = random(canvas.height / 10 - 1) * 10;
+                }
+            }
             // Food Intersects
             if (body[0].intersects(food)) {
                 body.push(new Rectangle(0, 0, 10, 10));
                 score += 1;
                 food.x = random(canvas.width / 10 - 1) * 10;
                 food.y = random(canvas.height / 10 - 1) * 10;
+                aEat.play();
+                //reset chances
+                chances = ~~(Math.random()*100);
+                console.log(chances);
+            }
+            // banana Intersects modification of the snake size method
+            if (body[0].intersects(banana)) {
+                score += 2;
+                banana.x = random(canvas.width / 10 - 1) * 10;
+                banana.y = random(canvas.height / 10 - 1) * 10;
+                //reset chances
+                chances = ~~(Math.random()*100);
+                console.log(chances);                
+                //for now use same sound
                 aEat.play();
             }
             // Wall Intersects (outdated code)
@@ -300,7 +342,7 @@
             // pause = true;
             // }
             //}
-            // Body Intersects
+            // Body Intersects itself
             for (i = 2, l = body.length; i < l; i += 1) {
                 if (body[0].intersects(body[i])) {
                     gameover = true;
@@ -322,10 +364,10 @@
         var i = 0,
         l = 0;
         // Clean canvas
-        ctx.fillStyle = '#030';
+        ctx.fillStyle = '#ddd';
         ctx.fillRect(0, 0, canvas.width, canvas.height);
         // Draw title
-        ctx.fillStyle = '#fff';
+        ctx.fillStyle = 'white';
         ctx.textAlign = 'center';
         ctx.fillText('HIGH SCORES', 150, 30);
         // Draw high scores

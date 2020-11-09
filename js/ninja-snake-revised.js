@@ -33,9 +33,10 @@
         iBody = new Image(),
         iFood = new Image(),
         aEat = new Audio(),
-        aDie = new Audio();
+        aDie = new Audio();        
         // randomizer for food and banana
         var chances = ~~(Math.random()*100);
+        //
     //added correction on return
     window.requestAnimationFrame = (function () {
         return (
@@ -113,6 +114,7 @@
         return ~~(Math.random() * max);
     }
     function addHighscore(score) {
+        var i;
         posHighscore = 0;
         while (
             highscores[posHighscore] > score && posHighscore < highscores.length) {
@@ -123,6 +125,14 @@
                 highscores.length = 10;
             }
             localStorage.highscores = highscores.join(',');
+            //check if the most recent score is in highscores
+            if (highscores.includes(score)) {
+                console.log('you got a high score');
+            } else {
+                console.log('you do not get a highscore');
+            }           
+            // console.log(score);             
+            // console.log(highscores);
     }
     function repaint() {
         window.requestAnimationFrame(repaint);
@@ -137,7 +147,7 @@
         }
     }
     function init() {     
-        console.log(chances);
+        // console.log(chances);
         // Get canvas and context
         canvas = document.getElementById('canvas');
         ctx = canvas.getContext('2d');
@@ -195,7 +205,10 @@
         body.push(new Rectangle(30, 40, 10, 10));
         body.push(new Rectangle(20, 40, 10, 10));
         body.push(new Rectangle(10, 40, 10, 10));
-        body.push(new Rectangle(0, 40, 10, 10));        
+        body.push(new Rectangle(0, 40, 10, 10));
+        body.push(new Rectangle(-10, 40, 10, 10));
+        body.push(new Rectangle(-20, 40, 10, 10));            
+        body.push(new Rectangle(-30, 40, 10, 10));  
         //first food
         food.x = random(canvas.width / 10 - 1) * 10;
         food.y = random(canvas.height / 10 - 1) * 10;
@@ -317,7 +330,7 @@
                 aEat.play();
                 //reset chances
                 chances = ~~(Math.random()*100);
-                console.log(chances);
+                // console.log(chances);
             }
             // banana Intersects modification of the snake size method
             if (body[0].intersects(banana)) {
@@ -326,7 +339,7 @@
                 banana.y = random(canvas.height / 10 - 1) * 10;
                 //reset chances
                 chances = ~~(Math.random()*100);
-                console.log(chances);                
+                // console.log(chances);                
                 //for now use same sound
                 aEat.play();
             }

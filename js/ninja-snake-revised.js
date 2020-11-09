@@ -36,7 +36,7 @@
         aDie = new Audio();        
         // randomizer for food and banana
         var chances = ~~(Math.random()*100);
-        //
+           
     //added correction on return
     window.requestAnimationFrame = (function () {
         return (
@@ -113,6 +113,15 @@
     function random(max) {
         return ~~(Math.random() * max);
     }
+    //audio compatibility added audios in format m4a for alternative browsers
+    function canPlayOgg() {
+		var aud = new Audio();
+		if (aud.canPlayType('audio/ogg').replace(/no/, '')) {
+			return true;
+		} else {
+		    return false;
+		}
+	};
     function resize() {
 		var w = window.innerWidth / canvas.width;
 		var h = window.innerHeight / canvas.height;
@@ -163,17 +172,19 @@
         iBanana.src = 'assets/banana.png';
         iBody.src = 'assets/body.png';
         iFood.src = 'assets/fruit.png';
-        aEat.src = 'assets/chomp.oga';
-        aDie.src = 'assets/dies.oga';
+        aEat.src = 'assets/chomp.ogg';
+        aDie.src = 'assets/dies.ogg';
+        if (canPlayOgg()) {
+			aEat.src="assets/chomp.ogg";
+			aDie.src = 'assets/dies.ogg';
+        } else {
+			aEat.src="assets/chomp.m4a";
+			aDie.src = 'assets/dies.m4a';
+		}
         // Create food        
         food = new Rectangle(80, 80, 10, 10);
         // create banana 
-        banana = new Rectangle (0, 0, 10, 10);
-        // Create walls old code if added needs to be converted
-        //wall.push(new Rectangle(50, 50, 10, 10));
-        //wall.push(new Rectangle(50, 100, 10, 10));
-        //wall.push(new Rectangle(100, 50, 10, 10));
-        //wall.push(new Rectangle(100, 100, 10, 10));
+        banana = new Rectangle (0, 0, 10, 10);        
         // Load saved highscores
         if (localStorage.highscores) {
             highscores = localStorage.highscores.split(',');

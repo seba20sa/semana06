@@ -1,6 +1,5 @@
- body {
-    margin: 0;
-    padding: 0;
+ body {    
+    
     text-align: center;
     background-color: #aaa;
 }
@@ -10,5 +9,7 @@ h1 {
     font-weight: bold;
     margin-left: 5%;
 }
+
+   
 
 

@@ -10,7 +10,8 @@
         lastPress = null,
         //context
         canvas = null,
-        ctx = null,        
+        ctx = null,
+        // fullscreen = false,                
         // game status
         pause = false,
         gameover = false,
@@ -35,6 +36,7 @@
         // aCena = new Audio(),
         aEat = new Audio(),
         aDie = new Audio();
+        
 
         // randomizer for food and banana
         var chances = ~~(Math.random()*100);
@@ -144,15 +146,8 @@
                 highscores.length = 10;
             }
             localStorage.highscores = highscores.join(',');
-            //check if the most recent score is in highscores
-            if (highscores.includes(score)) {
-                console.log('you got a high score');
-            } else {
-                console.log('you do not get a highscore');
-            }           
-            // console.log(score);             
-            // console.log(highscores);
     }
+    
     function repaint() {
         window.requestAnimationFrame(repaint);
         if (scenes.length) {
@@ -347,27 +342,28 @@
                 }
             }
             // Food Intersects
-            if (body[0].intersects(food)) {
-                aEat.play();
+            if (body[0].intersects(food)) {                
                 body.push(new Rectangle(0, 0, 10, 10));
                 score += 1;
                 food.x = random(canvas.width / 10 - 1) * 10;
-                food.y = random(canvas.height / 10 - 1) * 10;                
-                //reset chances
-                chances = ~~(Math.random()*100);
-                // console.log(chances);
+                food.y = random(canvas.height / 10 - 1) * 10;                                
+                chances = ~~(Math.random()*100);                
+                aEat.play();
             }
             // banana Intersects modification of the snake size method
-            if (body[0].intersects(banana)) {
-                aEat.play();
+            if (body[0].intersects(banana)) {                
                 score += 2;
                 banana.x = random(canvas.width / 10 - 1) * 10;
-                banana.y = random(canvas.height / 10 - 1) * 10;
-                //reset chances
+                banana.y = random(canvas.height / 10 - 1) * 10;                
                 chances = ~~(Math.random()*100);
-                // console.log(chances);                
-                //for now use same sound
-                
+                aEat.play();
+                // each time the head intersects banana we try to updates the scores
+                console.log('we captured the element!')
+                function sendTenScores(score) {
+                    fetch("https://jsonplaceholder.typicode.com/?score=10")
+                        .then(() => console.log('Score has been sent'))
+                        .catch(() => console.log('Something went wrong'))
+                }
             }
             // Wall Intersects (outdated code)
             //for (i = 0, l = wall.length; i < l; i += 1) {

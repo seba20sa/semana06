@@ -11,7 +11,10 @@
         //context
         canvas = null,
         ctx = null,
-        // fullscreen = false,                
+        // screen
+        fullscreen = false,
+        buffer = null,
+        bufferCtx = null,
         // game status
         pause = false,
         gameover = false,
@@ -156,36 +159,7 @@
             scenes[currentScene].act();
         }
     }
-    function init() {     
-        // console.log(chances);
-        // Get canvas and context
-        canvas = document.getElementById('canvas');
-        ctx = canvas.getContext('2d');
-        // Load assets audio compatible for chrome
-        iBanana.src = 'assets/banana.png';
-        iBody.src = 'assets/body.png';
-        iFood.src = 'assets/fruit.png';        
-        if (canPlayOgg()) {
-			aEat.src="assets/chomp.oga";
-            aDie.src = 'assets/dies.ogg';
-            // aCena.src = 'assets/cena.ogg';
-        } else {
-			aEat.src="assets/chomp.m4a";
-            aDie.src = 'assets/dies.m4a';
-            // aCena.src = 'assets/cena.m4a';            
-		}
-        // Create food        
-        food = new Rectangle(80, 80, 10, 10);
-        // create banana 
-        banana = new Rectangle (80, 80, 10, 10);        
-        // Load saved highscores
-        if (localStorage.highscores) {
-            highscores = localStorage.highscores.split(',');
-        }
-        // Start game
-        run();
-        repaint();
-    }
+    
     // Main Scene
     mainScene = new Scene();
     mainScene.paint = function (ctx) {
@@ -203,8 +177,7 @@
         // Load next scene
         if (lastPress === KEY_ENTER) {
             loadScene(highscoresScene);
-            lastPress = null;
-            
+            lastPress = null;            
         }
     };
     // Game Scene
@@ -413,5 +386,36 @@
             lastPress = null;
         }
     };
+    function init() {     
+        // console.log(chances);
+        // Get canvas and context
+        canvas = document.getElementById('canvas');
+        ctx = canvas.getContext('2d');
+        // Load assets audio compatible for chrome
+        iBanana.src = 'assets/banana.png';
+        iBody.src = 'assets/body.png';
+        iFood.src = 'assets/fruit.png';        
+        if (canPlayOgg()) {
+			aEat.src="assets/chomp.oga";
+            aDie.src = 'assets/dies.ogg';
+            // aCena.src = 'assets/cena.ogg';
+        } else {
+			aEat.src="assets/chomp.m4a";
+            aDie.src = 'assets/dies.m4a';
+            // aCena.src = 'assets/cena.m4a';            
+		}
+        // Create food        
+        food = new Rectangle(80, 80, 10, 10);
+        // create banana 
+        banana = new Rectangle (80, 80, 10, 10);        
+        // Load saved highscores
+        if (localStorage.highscores) {
+            highscores = localStorage.highscores.split(',');
+        }
+        // Start game
+        resize();
+        run();
+        repaint();
+    }
     window.addEventListener('load', init, false);
 }(window));

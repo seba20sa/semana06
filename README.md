@@ -15,7 +15,10 @@ Because the ammount of time used on fixing the errors (sometimes for changing th
 I decided to re-start the whole script to match the original in the tutorial and work for there on the finals steps asked in the objective. 
 Tested the revised version for error before carrying out with the weekly asignment.
 ## commit 11/9
-Added second fruit, tested for errors. Used the random function to make sure only one fruit appears at a time. Included the resize function to adapt the canvas to different browsers. Added some style to the canvas and body with css. After that I proceed to add 
+Added second fruit, tested for errors. Used the random function to make sure only one fruit appears at a time. Included the resize function to adapt the canvas to different browsers. Added some style to the canvas and body with css. After that I proceed to add
+## commit 11/10
+Added a async call to send the scores each time the head of the snake intersects with a banana element, fixed a bug that made the score go up all of the sudden
+by creating the food and banana away from the position where the snake body was created so they don't intersect before they are painted into the canvas.
 
 ## test:
 https://seba20sa.github.io/semana06/first-game.html

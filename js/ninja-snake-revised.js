@@ -36,11 +36,8 @@
         // aCena = new Audio(),
         aEat = new Audio(),
         aDie = new Audio();
-        
-
         // randomizer for food and banana
         var chances = ~~(Math.random()*100);
-           
     //added correction on return
     window.requestAnimationFrame = (function () {
         return (
@@ -146,8 +143,7 @@
                 highscores.length = 10;
             }
             localStorage.highscores = highscores.join(',');
-    }
-    
+    }    
     function repaint() {
         window.requestAnimationFrame(repaint);
         if (scenes.length) {
@@ -168,8 +164,7 @@
         // Load assets audio compatible for chrome
         iBanana.src = 'assets/banana.png';
         iBody.src = 'assets/body.png';
-        iFood.src = 'assets/fruit.png';
-        
+        iFood.src = 'assets/fruit.png';        
         if (canPlayOgg()) {
 			aEat.src="assets/chomp.oga";
             aDie.src = 'assets/dies.ogg';
@@ -177,13 +172,12 @@
         } else {
 			aEat.src="assets/chomp.m4a";
             aDie.src = 'assets/dies.m4a';
-            // aCena.src = 'assets/cena.m4a';
-            
+            // aCena.src = 'assets/cena.m4a';            
 		}
         // Create food        
         food = new Rectangle(80, 80, 10, 10);
         // create banana 
-        banana = new Rectangle (0, 0, 10, 10);        
+        banana = new Rectangle (80, 80, 10, 10);        
         // Load saved highscores
         if (localStorage.highscores) {
             highscores = localStorage.highscores.split(',');
@@ -221,14 +215,14 @@
         body.length = 0;
         //added more difficulty 
         body.push(new Rectangle(40, 40, 10, 10));
-        body.push(new Rectangle(30, 40, 10, 10));
-        body.push(new Rectangle(30, 40, 10, 10));
-        body.push(new Rectangle(20, 40, 10, 10));
-        body.push(new Rectangle(10, 40, 10, 10));
-        body.push(new Rectangle(0, 40, 10, 10));
-        body.push(new Rectangle(-10, 40, 10, 10));
-        body.push(new Rectangle(-20, 40, 10, 10));            
-        body.push(new Rectangle(-30, 40, 10, 10));  
+        body.push(new Rectangle(0, 0, 10, 10));
+        body.push(new Rectangle(0, 0, 10, 10));
+        body.push(new Rectangle(0, 0, 10, 10));
+        body.push(new Rectangle(0, 0, 10, 10));
+        body.push(new Rectangle(0, 0, 10, 10));
+        body.push(new Rectangle(0, 0, 10, 10));
+        body.push(new Rectangle(0, 0, 10, 10));            
+        body.push(new Rectangle(0, 0, 10, 10));  
         //first food
         food.x = random(canvas.width / 10 - 1) * 10;
         food.y = random(canvas.height / 10 - 1) * 10;
@@ -358,13 +352,11 @@
                 chances = ~~(Math.random()*100);
                 aEat.play();
                 // each time the head intersects banana we try to updates the scores
-                console.log('we captured the element!')
-                function sendTenScores(score) {
-                    fetch("https://jsonplaceholder.typicode.com/?score=10")
-                        .then(() => console.log('Score has been sent'))
-                        .catch(() => console.log('Something went wrong'))
-                }
+                fetch(`https://jsonplaceholder.typicode.com/?score=${score}`)
+                    .then(() => console.log('Score has been sent'))
+                    .catch(() => console.log('Something went wrong'))
             }
+            
             // Wall Intersects (outdated code)
             //for (i = 0, l = wall.length; i < l; i += 1) {
             // if (food.intersects(wall[i])) {
@@ -424,5 +416,3 @@
     };
     window.addEventListener('load', init, false);
 }(window));
-            
-                

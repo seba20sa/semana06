@@ -355,8 +355,7 @@
                 fetch(`https://jsonplaceholder.typicode.com/?score=${score}`)
                     .then(() => console.log('Score has been sent'))
                     .catch(() => console.log('Something went wrong'))
-            }
-            
+            }            
             // Wall Intersects (outdated code)
             //for (i = 0, l = wall.length; i < l; i += 1) {
             // if (food.intersects(wall[i])) {

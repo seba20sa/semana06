@@ -325,16 +325,16 @@
                 body[0].y = canvas.height - body[0].height;
             }
             // if food or banana appears where the body is it should be re draw
-            for (i = 2; i < body.length; i++) {
-                if(body[i].intersects(food)) {
-                    food.x = random(canvas.width / 10 - 1) * 10;
-                    food.y = random(canvas.height / 10 - 1) * 10;
-                }
-                if(body[i].intersects(banana)) {
-                    banana.x = random(canvas.width / 10 - 1) * 10;
-                    banana.y = random(canvas.height / 10 - 1) * 10;
-                }
-            }
+            // for (i = 2; i < body.length; i++) {
+            //     if(body[i].intersects(food)) {
+            //         food.x = random(canvas.width / 10 - 1) * 10;
+            //         food.y = random(canvas.height / 10 - 1) * 10;
+            //     }
+            //     if(body[i].intersects(banana)) {
+            //         banana.x = random(canvas.width / 10 - 1) * 10;
+            //         banana.y = random(canvas.height / 10 - 1) * 10;
+            //     }
+            // }
             // Food Intersects
             if (body[0].intersects(food)) {                
                 body.push(new Rectangle(0, 0, 10, 10));
